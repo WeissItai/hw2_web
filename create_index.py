@@ -84,7 +84,7 @@ def build_index(dir_path):
         lengths[doc_id] = sqrt(lengths[doc_id])
 
     p = pprint.PrettyPrinter()
-    p.pprint(lengths)
+    p.pprint(idf)
 
     data = {
         'vec_len': lengths,
