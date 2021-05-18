@@ -17,6 +17,14 @@ stopwords = {
              }
 
 
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+
+
 # Remove punctuation
 def clear_word(s):
     for c in punctuation:
@@ -29,7 +37,7 @@ def clear_text(txt):
     cleaned = ""
     for word in txt.split():
         word = clear_word(word)
-        if word in stopwords:
+        if is_number(word) or word in stopwords:
             continue
         cleaned += " " + word
 

@@ -30,7 +30,7 @@ def parse_xml(fname):
         # add abstract
         abstract = getattr(record.find("./EXTRACT"), 'text', '')
         data[doc_id] += '\n' + clear_text(abstract)
-    #
+
     # p = pprint.PrettyPrinter()
     # p.pprint(data)
     return data
@@ -51,7 +51,7 @@ def create_corpus(dir_path):
 
 def build_index(dir_path):
 
-    tfidf = defaultdict(dict)
+    tf = defaultdict(dict)
     idf = defaultdict(lambda: 0.0)
     lengths = defaultdict(lambda: 0.0)
 
@@ -66,32 +66,30 @@ def build_index(dir_path):
         c.clear()
         c.update(text.split())
         for term, cnt in c.items():
-            tfidf[term][doc_id] = cnt
+            tf[term][doc_id] = cnt
             idf[term] += 1
 
         num_docs += 1
 
     # Compute IDF
-    for term, docs in tfidf.items():
-        idf_ = log(num_docs / idf[term])
-        for doc_id in list(docs.keys()):
-            docs[doc_id] = docs[doc_id] * idf_
+    for term in tf.keys():
+        idf[term] = log(num_docs / idf[term])
 
     # Compute vector lengths
-    for token, scores in tfidf.items():
+    for token, scores in tf.items():
         for doc_id, score in scores.items():
-            lengths[doc_id] += score ** 2
+            lengths[doc_id] += (score * idf[token]) ** 2
 
     for doc_id in lengths.keys():
         lengths[doc_id] = sqrt(lengths[doc_id])
-
 
     p = pprint.PrettyPrinter()
     p.pprint(lengths)
 
     data = {
         'vec_len': lengths,
-        'tf_idf': tfidf
+        'tf': tf,
+        'idf': idf
     }
 
     with open('vsm_inverted_index.json', 'w') as f:
