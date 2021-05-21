@@ -4,7 +4,7 @@ import json
 import pprint
 from math import log, sqrt
 import xml.etree.ElementTree as ET
-from process_language import clear_text
+from process_language import clean_text
 from collections import defaultdict, Counter
 
 
@@ -21,15 +21,15 @@ def parse_xml(fname):
 
         # add title
         title = record.find("./TITLE").text
-        data[doc_id] = clear_text(title)
+        data[doc_id] = title
 
         # add extract
         extract = getattr(record.find("./ABSTRACT"), 'text', '')
-        data[doc_id] += '\n' + clear_text(extract)
+        data[doc_id] += '\n' + extract
 
         # add abstract
         abstract = getattr(record.find("./EXTRACT"), 'text', '')
-        data[doc_id] += '\n' + clear_text(abstract)
+        data[doc_id] += '\n' + abstract
 
     # p = pprint.PrettyPrinter()
     # p.pprint(data)
@@ -49,6 +49,14 @@ def create_corpus(dir_path):
     return corpus
 
 
+def get_tf(text):
+
+    text = clean_text(text)
+    c = Counter()
+    c.update(text.split())
+    return c
+
+
 def build_index(dir_path):
 
     tf = defaultdict(dict)
@@ -57,14 +65,12 @@ def build_index(dir_path):
 
     num_docs = 0
 
-    c = Counter()
     corpus = create_corpus(dir_path)
 
     for doc_id, text in corpus.items():
 
         # Compute TF
-        c.clear()
-        c.update(text.split())
+        c = get_tf(text)
         for term, cnt in c.items():
             tf[term][doc_id] = cnt
             idf[term] += 1
@@ -83,8 +89,8 @@ def build_index(dir_path):
     for doc_id in lengths.keys():
         lengths[doc_id] = sqrt(lengths[doc_id])
 
-    p = pprint.PrettyPrinter()
-    p.pprint(idf)
+    # p = pprint.PrettyPrinter()
+    # p.pprint(idf)
 
     data = {
         'vec_len': lengths,

@@ -33,7 +33,7 @@ def clear_word(s):
     return s.strip()
 
 
-def clear_text(txt):
+def clean_text(txt):
     cleaned = ""
     for word in txt.split():
         word = clear_word(word)
