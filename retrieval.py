@@ -35,8 +35,8 @@ def compute_cossim(doc_scores: dict, token_weights: dict, index: dict):
         doc_len = index_len[doc]
         final_score = score / (query_L * doc_len)
         final_scores[doc] = final_score
-    sorted_docs = dict(sorted(final_scores.items(), key=lambda item: item[1]))
+    sorted_docs = sorted(final_scores.items(), key=lambda item: item[1], reverse=True)
     text_file = open("ranked_query_docs.txt", "w")
-    text_file.writelines(sorted_docs.keys())
+    text_file.writelines("\n".join([i for i, j in sorted_docs]))
     text_file.close()
 
