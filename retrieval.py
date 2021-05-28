@@ -14,10 +14,10 @@ def create_scored_documents(query: str, index: dict):
     index_tf = index['tf']
     query_tf = get_tf(query)
     for token in query_tf.keys():
-        token_idf = index_idf[token]
+        token_idf = index_idf.get(token, 0.0)
         token_tf = query_tf[token]
         token_weights[token] = token_tf * token_idf
-        token_occurences = index_tf[token]
+        token_occurences = index_tf.get(token, {})
         for doc in token_occurences.keys():
             doc_tf = token_occurences[doc]
             if doc not in doc_scores.keys():
@@ -37,6 +37,6 @@ def compute_cossim(doc_scores: dict, token_weights: dict, index: dict):
         final_scores[doc] = final_score
     sorted_docs = sorted(final_scores.items(), key=lambda item: item[1], reverse=True)
     text_file = open("ranked_query_docs.txt", "w")
-    text_file.writelines("\n".join([i for i, j in sorted_docs]))
+    text_file.writelines("\n".join([str(i) for i in sorted_docs]))
     text_file.close()
 
