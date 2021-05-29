@@ -8,4 +8,4 @@ elif sys.argv[1] == "query":
     query = sys.argv[3]
     index = get_inverted_index(index_path)
     retrieved_doc_scores, token_weights = create_scored_documents(query=query, index=index)
-    compute_cossim(doc_scores=retrieved_doc_scores, token_weights=token_weights)
+    compute_cossim(doc_scores=retrieved_doc_scores, token_weights=token_weights, index=index)
