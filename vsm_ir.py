@@ -2,7 +2,9 @@ import sys
 from retrieval import *
 
 if sys.argv[1] == "create_index":
-    pass
+    xml_path = sys.argv[2]
+    build_index(xml_path)
+
 elif sys.argv[1] == "query":
     index_path = sys.argv[2]
     query = sys.argv[3]
