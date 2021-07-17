@@ -1,5 +1,7 @@
 from create_index import *
 
+LIMIT = 50
+
 def get_inverted_index(file: str):
     """ Get inverted index from json file """
     with open(file, 'r') as j:
@@ -37,6 +39,6 @@ def compute_cossim(doc_scores: dict, token_weights: dict, index: dict):
         final_scores[doc] = final_score
     sorted_docs = sorted(final_scores.items(), key=lambda item: item[1], reverse=True)
     text_file = open("ranked_query_docs.txt", "w")
-    text_file.writelines("\n".join([str(i) for i in sorted_docs]))
+    text_file.writelines("\n".join([i[0] for i in sorted_docs][:LIMIT]))
     text_file.close()
 

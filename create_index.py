@@ -1,10 +1,9 @@
 
 import os
 import json
-import pprint
 from math import log, sqrt
 import xml.etree.ElementTree as ET
-from process_language import clean_text
+from process_language import tokenize
 from collections import defaultdict, Counter
 
 
@@ -51,9 +50,9 @@ def create_corpus(dir_path):
 
 def get_tf(text):
 
-    text = clean_text(text)
+    tokens = tokenize(text)
     c = Counter()
-    c.update(text.split())
+    c.update(tokens)
     return c
 
 
@@ -90,9 +89,6 @@ def build_index(dir_path):
 
     for doc_id in lengths.keys():
         lengths[doc_id] = sqrt(lengths[doc_id])
-
-    # p = pprint.PrettyPrinter()
-    # p.pprint(idf)
 
     data = {
         'vec_len': lengths,

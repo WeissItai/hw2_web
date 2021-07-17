@@ -1,5 +1,6 @@
 
 from string import punctuation
+from nltk import PorterStemmer
 
 stopwords = {
     'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours',
@@ -30,18 +31,21 @@ def clear_word(s):
     for c in punctuation:
         if c in s:
             s = s.replace(c, ' ')
-    return s.strip()
+    return s.strip().lower()
 
 
-def clean_text(txt):
-    cleaned = ""
+def tokenize(txt):
+    tokens = []
+
+    ps = PorterStemmer()
     for word in txt.split():
-        word = clear_word(word)
+        word = ps.stem(clear_word(word))
+
         if is_number(word) or word in stopwords:
             continue
-        cleaned += " " + word
+        tokens.append(word)
 
-    return cleaned
+    return tokens
 
 
 
