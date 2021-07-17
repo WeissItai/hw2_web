@@ -71,8 +71,10 @@ def build_index(dir_path):
 
         # Compute TF
         c = get_tf(text)
+        max_word = c[max(c, key=c.get)]
+
         for term, cnt in c.items():
-            tf[term][doc_id] = cnt
+            tf[term][doc_id] = cnt / max_word
             idf[term] += 1
 
         num_docs += 1
